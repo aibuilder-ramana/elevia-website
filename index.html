@@ -41,9 +41,10 @@
     }
     .nav-logo { display: flex; align-items: center; gap: 9px; font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; margin-right: 36px; }
     .nav-mark  {
-      height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
     }
-    .nav-mark img { height: 100%; width: auto; object-fit: contain; }
+    .nav-mark .nav-icon     { height: 34px; width: auto; object-fit: contain; }
+    .nav-mark .nav-wordmark { height: 28px; width: auto; object-fit: contain; }
     .nav-links { display: flex; align-items: center; gap: 2px; }
     .nav-btn   { padding: 7px 13px; border-radius: 7px; font-size: .84rem; font-weight: 500; color: rgba(255,255,255,.6); background: none; border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; transition: all .2s; }
     .nav-btn:hover { color: #fff; background: rgba(255,255,255,.07); transform: translateY(-1px); }
@@ -494,7 +495,7 @@
 
 <!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
 <nav>
-  <a class="nav-logo" href="#"><div class="nav-mark"><img src="logo-dark.png" alt="Elevia"/></div></a>
+  <a class="nav-logo" href="#"><div class="nav-mark"><img src="icon-dark.png" class="nav-icon" alt=""/><img src="logo-dark.png" class="nav-wordmark" alt="Elevia"/></div></a>
   <div class="nav-links">
     <button class="nav-btn">For Patients</button>
     <div class="nav-item">
@@ -795,7 +796,7 @@
 <!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
 <footer>
   <div style="display:flex;align-items:center;gap:10px">
-    <div style="flex-shrink:0"><img src="logo-dark.png" alt="Elevia" style="height:28px;width:auto;object-fit:contain"/></div>
+    <div style="flex-shrink:0;display:flex;align-items:center;gap:8px"><img src="icon-dark.png" alt="" style="height:30px;width:auto;object-fit:contain"/><img src="logo-dark.png" alt="Elevia" style="height:24px;width:auto;object-fit:contain"/></div>
     <div><div class="footer-sub">Healthcare will run on AI. Elevia is the interface.</div></div>
   </div>
   <div class="footer-links">
