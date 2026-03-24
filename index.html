@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elevia — Your health. Fully handled.</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:  #35dcc2; --mint: #78eaca; --navy: #0a1628; --dark: #0f2137;
+      --text:  #1a202c; --muted: #64748b;
+      --light: #f8fafc; --white: #ffffff;
+      --border: rgba(255,255,255,.08);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); }
+
+    /* ══ ANIMATED GRADIENT ════════════════════════════════════ */
+    @keyframes gradMove {
+      0%   { background-position: 0%   50% }
+      50%  { background-position: 100% 50% }
+      100% { background-position: 0%   50% }
+    }
+    .grad-text {
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%;
+      animation: gradMove 6s ease infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ══ NAV ══════════════════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(10,22,40,.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 56px; height: 66px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 9px; font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; margin-right: 36px; }
+    .nav-mark  {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    }
+    .nav-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-btn   { padding: 7px 13px; border-radius: 7px; font-size: .84rem; font-weight: 500; color: rgba(255,255,255,.6); background: none; border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; transition: all .2s; }
+    .nav-btn:hover { color: #fff; background: rgba(255,255,255,.07); transform: translateY(-1px); }
+    .nav-item  { position: relative; }
+    .dropdown  { position: absolute; top: calc(100% + 8px); left: 0; background: #0f2137; border: 1px solid rgba(53,220,194,.15); border-radius: 12px; padding: 8px; min-width: 230px; box-shadow: 0 20px 48px rgba(0,0,0,.6); display: none; z-index: 300; }
+    .nav-item:hover .dropdown { display: block; }
+    .dd-item   { padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: background .15s; }
+    .dd-item:hover { background: rgba(53,220,194,.08); }
+    .dd-title  { font-size: .84rem; font-weight: 600; color: #fff; }
+    .dd-sub    { font-size: .73rem; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .dd-hr     { height: 1px; background: var(--border); margin: 6px 0; }
+    .nav-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    .nav-ghost { font-size: .84rem; color: rgba(255,255,255,.5); background: none; border: none; cursor: pointer; font-family: inherit; padding: 8px 12px; transition: color .2s; }
+    .nav-ghost:hover { color: #fff; }
+    .nav-cta   {
+      padding: 8px 20px; border-radius: 8px; font-size: .84rem; font-weight: 700;
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite;
+      color: #fff; border: none; cursor: pointer; font-family: inherit;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .nav-cta:hover { transform: scale(1.04); box-shadow: 0 6px 20px rgba(53,220,194,.35); }
+
+    /* ══ HERO ══════════════════════════════════════════════════ */
+    .hero {
+      background: var(--navy);
+      padding: 120px 56px 108px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    /* cursor glow — updated by JS via --gx/--gy */
+    .hero-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(600px circle at var(--gx, 50%) var(--gy, 40%),
+          rgba(53,220,194,.16), transparent 40%),
+        radial-gradient(900px circle at var(--gx, 50%) var(--gy, 40%),
+          rgba(79,172,254,.1), transparent 60%);
+    }
+    /* subtle static ambient glow */
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(53,220,194,.12), transparent),
+        radial-gradient(ellipse 40% 40% at 80% 60%, rgba(79,172,254,.07), transparent);
+    }
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(53,220,194,.1); border: 1px solid rgba(53,220,194,.18);
+      color: var(--teal); font-size: .78rem; font-weight: 600;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 32px; letter-spacing: .04em;
+    }
+    .hero-h1 {
+      font-size: 5rem; font-weight: 900; color: #fff;
+      line-height: 1.0; letter-spacing: -.035em; max-width: 900px; margin-bottom: 22px;
+    }
+    .hero-sub {
+      font-size: 1.12rem; font-weight: 400; color: rgba(255,255,255,.48);
+      max-width: 540px; margin-bottom: 44px; line-height: 1.7; letter-spacing: .005em;
+    }
+    .hero-sub strong { color: rgba(255,255,255,.75); font-weight: 500; }
+
+    /* search box — Claude style */
+    .search-wrap { width: 100%; max-width: 720px; margin-bottom: 28px; position: relative; }
+    .search-box {
+      width: 100%; background: #fff; border: 1.5px solid #e5e7eb;
+      border-radius: 20px; padding: 20px 22px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.12);
+      transition: border-color .2s, box-shadow .25s;
+    }
+    .search-box:focus-within {
+      border-color: var(--teal); box-shadow: 0 8px 36px rgba(53,220,194,.18), 0 4px 16px rgba(0,0,0,.1);
+    }
+    .search-box input {
+      width: 100%; background: none; border: none; outline: none;
+      font-family: inherit; font-size: 1.05rem; color: #111827; caret-color: var(--teal);
+      min-height: 30px;
+    }
+    .search-box input::placeholder { color: #9ca3af; }
+    .search-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+    .search-left  { display: flex; align-items: center; gap: 6px; }
+
+    .ft-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 5px 11px; font-family: inherit; font-size: .8rem;
+      color: #4b5563; cursor: pointer; transition: all .2s;
+    }
+    .ft-btn:hover { background: #f9fafb; border-color: #d1d5db; transform: translateY(-1px); }
+    .ft-add {
+      width: 28px; height: 28px; border-radius: 8px; background: none;
+      border: 1px solid #e5e7eb; cursor: pointer; font-size: 1rem; color: #6b7280;
+      display: flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .ft-add:hover { background: #f3f4f6; color: #111827; border-color: #9ca3af; transform: scale(1.08); }
+
+    /* tracker dropdown */
+    .tracker-dropdown {
+      position: absolute; top: calc(100% + 10px); left: 0;
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 16px;
+      padding: 8px; min-width: 250px;
+      box-shadow: 0 16px 40px rgba(0,0,0,.16);
+      display: none; z-index: 20;
+    }
+    .tracker-dropdown.open { display: block; }
+    .td-header { font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #9ca3af; padding: 4px 10px 8px; }
+    .td-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      font-size: .84rem; color: #374151; transition: background .15s, transform .15s;
+    }
+    .td-item:hover { background: #f9fafb; transform: translateX(2px); }
+    .td-logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;
+    }
+    .td-name  { font-size: .84rem; font-weight: 600; color: #111827; }
+    .td-desc  { font-size: .72rem; color: #9ca3af; margin-top: 1px; }
+
+    .search-right { display: flex; align-items: center; gap: 8px; }
+    .mic-btn {
+      width: 32px; height: 32px; border-radius: 50%; background: none;
+      border: none; cursor: pointer; color: #9ca3af; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .mic-btn:hover { color: #374151; background: #f3f4f6; transform: scale(1.1); }
+    .search-send {
+      width: 32px; height: 32px; border-radius: 8px; background: #e5e7eb;
+      border: none; cursor: pointer; color: #9ca3af; font-size: .85rem;
+      display: flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .search-send.has-input {
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%; animation: gradMove 4s ease infinite;
+      color: #fff; transform: scale(1.05);
+    }
+
+    /* trust strip */
+    .trust-strip {
+      display: flex; align-items: center; gap: 28px; margin-top: 4px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .75rem; color: rgba(255,255,255,.3); font-weight: 500;
+    }
+    .trust-item span { font-size: .9rem; }
+
+    /* ══ HOW IT WORKS ══════════════════════════════════════════ */
+    .hiw-section {
+      padding: 96px 56px; background: var(--white);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .section-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; color: var(--teal); }
+    .section-h2    { font-size: 2.2rem; font-weight: 900; letter-spacing: -.025em; line-height: 1.15; text-align: center; }
+    .section-sub   { font-size: .96rem; color: var(--muted); text-align: center; margin-top: 10px; max-width: 480px; line-height: 1.7; }
+    .hiw-grid {
+      display: grid; grid-template-columns: 1fr 48px 1fr 48px 1fr;
+      align-items: center; gap: 0; max-width: 900px; width: 100%; margin-top: 56px;
+    }
+    .hiw-step {
+      text-align: center; padding: 36px 28px; border-radius: 22px;
+      background: var(--light); border: 1px solid #e2e8f0;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .hiw-step:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,.07); }
+    .hiw-icon-wrap {
+      width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    }
+    .hiw-icon-wrap.c1 { background: rgba(53,220,194,.12); }
+    .hiw-icon-wrap.c2 { background: rgba(102,126,234,.12); }
+    .hiw-icon-wrap.c3 { background: rgba(245,158,11,.12); }
+    .hiw-title { font-size: 1rem; font-weight: 800; letter-spacing: -.01em; margin-bottom: 6px; }
+    .hiw-desc  { font-size: .81rem; color: var(--muted); line-height: 1.6; }
+    .hiw-arrow { text-align: center; color: #d1d5db; font-size: 1.4rem; }
+
+    /* ══ DEMO SECTION ══════════════════════════════════════════ */
+    .demo-section { padding: 96px 56px; background: var(--light); }
+    .demo-header  { text-align: center; margin-bottom: 52px; }
+
+    .demo-shell {
+      max-width: 960px; margin: 0 auto;
+      display: grid; grid-template-columns: 220px 1fr; gap: 0;
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,.12), 0 0 0 1px #e2e8f0;
+    }
+    .scenario-sidebar { background: var(--navy); padding: 24px 16px; display: flex; flex-direction: column; gap: 6px; }
+    .sidebar-title    { font-size: .69rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 8px; padding: 0 8px; }
+    .scenario-btn {
+      padding: 10px 12px; border-radius: 10px; background: none; border: none;
+      color: rgba(255,255,255,.45); font-family: inherit; font-size: .8rem;
+      font-weight: 500; text-align: left; cursor: pointer; transition: all .2s;
+      display: flex; align-items: center; gap: 8px; line-height: 1.35;
+    }
+    .scenario-btn:hover  { background: rgba(255,255,255,.07); color: #fff; }
+    .scenario-btn.active { background: rgba(53,220,194,.1); color: var(--teal); border: 1px solid rgba(53,220,194,.18); }
+    .s-icon { font-size: 1rem; flex-shrink: 0; }
+
+    .chat-panel  { background: #0b1929; display: flex; flex-direction: column; }
+    .chat-topbar { padding: 14px 20px; background: rgba(53,220,194,.05); border-bottom: 1px solid rgba(53,220,194,.1); display: flex; align-items: center; gap: 10px; }
+    .chat-av      { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0;
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite; }
+    .chat-name    { font-size: .88rem; font-weight: 700; color: #fff; }
+    .chat-tagline { font-size: .7rem; color: var(--teal); margin-top: 1px; }
+    .online-ind   { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: .7rem; color: var(--teal); }
+    .online-dot   { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.35} }
+
+    .chat-messages { flex: 1; padding: 22px; display: flex; flex-direction: column; gap: 14px; min-height: 460px; max-height: 460px; overflow-y: auto; }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
+
+    .msg { display: flex; gap: 8px; animation: fadeUp .3s ease; }
+    .msg.user { flex-direction: row-reverse; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)} }
+    .msg-av { width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0; margin-top: 2px;
+      background: linear-gradient(135deg, #35dcc2, #78eaca);
+      display: flex; align-items: center; justify-content: center; font-size: .75rem; }
+    .msg-av.u { background: rgba(255,255,255,.1); color: rgba(255,255,255,.55); font-size: .62rem; font-weight: 700; }
+    .msg-bubble { max-width: 76%; padding: 10px 14px; border-radius: 14px; font-size: .83rem; line-height: 1.6; }
+    .msg.agent .msg-bubble { background: rgba(255,255,255,.07); color: rgba(255,255,255,.88); border-radius: 4px 14px 14px 14px; }
+    .msg.user  .msg-bubble { background: linear-gradient(135deg,#35dcc2,#4facfe); color: #fff; border-radius: 14px 4px 14px 14px; }
+
+    /* streaming cursor */
+    @keyframes cursor-blink { 0%,100%{opacity:1}50%{opacity:0} }
+    .msg-streaming .msg-bubble::after { content:'▌'; margin-left:2px; animation:cursor-blink .7s infinite; color:rgba(255,255,255,.4); font-size:.75em; }
+
+    .typing { display: flex; gap: 8px; }
+    .typing-bubble { background: rgba(255,255,255,.07); padding: 12px 16px; border-radius: 4px 14px 14px 14px; display: flex; gap: 4px; align-items: center; }
+    .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); animation: bounce .9s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: .15s; }
+    .typing-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes bounce { 0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)} }
+
+    .screening-card { background: rgba(255,255,255,.05); border: 1px solid rgba(53,220,194,.2); border-radius: 14px; padding: 16px; margin-top: 4px; max-width: 78%; }
+    .sc-title { font-size: .78rem; font-weight: 700; color: var(--teal); margin-bottom: 12px; }
+    .sc-question { margin-bottom: 10px; }
+    .sc-q-text { font-size: .78rem; color: rgba(255,255,255,.7); margin-bottom: 6px; }
+    .sc-options { display: flex; gap: 6px; flex-wrap: wrap; }
+    .sc-opt { padding: 4px 10px; border-radius: 20px; font-size: .72rem; font-weight: 500; background: rgba(255,255,255,.07); color: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.1); cursor: pointer; transition: all .15s; }
+    .sc-opt:hover, .sc-opt.sel { background: rgba(53,220,194,.15); color: var(--teal); border-color: rgba(53,220,194,.3); }
+
+    .doctor-tiles { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; max-width: 88%; }
+    .doc-tile { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all .2s; }
+    .doc-tile:hover { background: rgba(53,220,194,.08); border-color: rgba(53,220,194,.25); transform: translateX(2px); }
+    .doc-tile.selected { background: rgba(53,220,194,.1); border-color: var(--teal); }
+    .doc-avatar { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .doc-avatar.a1 { background: linear-gradient(135deg,#667eea,#764ba2); }
+    .doc-avatar.a2 { background: linear-gradient(135deg,#f093fb,#f5576c); }
+    .doc-avatar.a3 { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+    .doc-info  { flex: 1; }
+    .doc-name  { font-size: .82rem; font-weight: 700; color: #fff; }
+    .doc-spec  { font-size: .72rem; color: rgba(255,255,255,.45); margin-top: 1px; }
+    .doc-meta  { display: flex; gap: 6px; margin-top: 4px; }
+    .doc-badge { font-size: .65rem; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+    .doc-badge.ins { background: rgba(53,220,194,.12); color: var(--teal); }
+    .doc-rating { margin-left: auto; font-size: .75rem; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+
+    .confirm-card { background: rgba(53,220,194,.07); border: 1px solid rgba(53,220,194,.25); border-radius: 14px; padding: 16px; max-width: 78%; }
+    .cc-title { font-size: .8rem; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+    .cc-row   { display: flex; gap: 8px; font-size: .77rem; color: rgba(255,255,255,.7); margin-bottom: 5px; }
+    .cc-label { color: rgba(255,255,255,.35); min-width: 80px; }
+
+    .intake-card { background: rgba(102,126,234,.07); border: 1px solid rgba(102,126,234,.2); border-radius: 14px; padding: 14px; max-width: 78%; }
+    .ic-title { font-size: .77rem; font-weight: 700; color: #a5b4fc; margin-bottom: 10px; }
+    .ic-q { font-size: .77rem; color: rgba(255,255,255,.65); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 6px; }
+    .ic-q-num { color: rgba(255,255,255,.25); flex-shrink: 0; }
+
+    .rx-card  { background: rgba(251,191,36,.06); border: 1px solid rgba(251,191,36,.2); border-radius: 14px; padding: 14px; max-width: 78%; }
+    .rx-title { font-size: .78rem; font-weight: 700; color: #fbbf24; margin-bottom: 8px; }
+    .rx-row   { font-size: .77rem; color: rgba(255,255,255,.65); margin-bottom: 4px; display: flex; gap: 8px; }
+    .rx-label { color: rgba(255,255,255,.35); min-width: 80px; }
+    .rx-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: .7rem; font-weight: 600; margin-top: 8px; }
+    .rx-status.due  { background: rgba(239,68,68,.15); color: #f87171; }
+    .rx-status.sent { background: rgba(53,220,194,.12); color: var(--teal); }
+
+    .chat-inputbar { padding: 14px 18px; border-top: 1px solid rgba(255,255,255,.05); display: flex; gap: 8px; }
+    .chat-input { flex: 1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 10px; padding: 9px 14px; color: rgba(255,255,255,.35); font-family: inherit; font-size: .83rem; outline: none; }
+    .chat-send  { width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, #35dcc2, #4facfe);
+      border: none; color: #fff; font-size: .9rem; cursor: pointer; flex-shrink: 0;
+      transition: transform .15s; }
+    .chat-send:hover { transform: scale(1.06); }
+
+    .replay-row { text-align: center; margin-top: 24px; }
+    .replay-btn { padding: 9px 26px; border-radius: 20px; background: none; border: 1.5px solid rgba(53,220,194,.4); color: var(--teal); font-size: .82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .2s; }
+    .replay-btn:hover { background: rgba(53,220,194,.08); border-color: var(--teal); transform: scale(1.03); }
+
+    /* ══ WHAT IS ELEVIA ════════════════════════════════════════ */
+    .what-section {
+      padding: 96px 56px;
+      background: var(--white);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .what-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; }
+    .what-h2    { font-size: 2.2rem; font-weight: 900; letter-spacing: -.025em; line-height: 1.15; margin-bottom: 20px; }
+    .what-body  { font-size: .96rem; color: var(--muted); line-height: 1.8; margin-bottom: 12px; }
+    .what-cards { display: flex; flex-direction: column; gap: 12px; }
+    .what-card  {
+      background: var(--light); border-radius: 14px; padding: 22px;
+      border: 1px solid #e2e8f0; display: flex; gap: 14px; align-items: flex-start;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .what-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.07); }
+    .wc-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+    .wc-icon.p { background: rgba(53,220,194,.1); }
+    .wc-icon.d { background: rgba(102,126,234,.1); }
+    .wc-label { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+    .wc-label.p { color: var(--teal); }
+    .wc-label.d { color: #818cf8; }
+    .wc-title { font-size: .92rem; font-weight: 700; margin-bottom: 3px; }
+    .wc-desc  { font-size: .8rem; color: var(--muted); line-height: 1.55; }
+
+    /* ══ PATIENTS SECTION ══════════════════════════════════════ */
+    .patients-section { padding: 96px 56px; background: var(--light); }
+    .sec-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; }
+    .sec-h2    { font-size: 2.2rem; font-weight: 900; letter-spacing: -.025em; line-height: 1.15; margin-bottom: 10px; }
+    .sec-sub   { font-size: .98rem; color: var(--muted); line-height: 1.75; max-width: 520px; margin-bottom: 8px; }
+    .sec-list  { list-style: none; margin-bottom: 44px; }
+    .sec-list li { font-size: .92rem; color: var(--muted); padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+    .sec-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .feat-card  {
+      background: var(--white); border-radius: 16px; padding: 24px;
+      border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .feat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(0,0,0,.09); border-color: #d1d5db; }
+    .feat-icon  { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .fi-t { background: rgba(53,220,194,.1); }
+    .fi-i { background: rgba(102,126,234,.1); }
+    .fi-a { background: rgba(245,158,11,.1); }
+    .fi-r { background: rgba(244,63,94,.1); }
+    .fi-s { background: rgba(14,165,233,.1); }
+    .feat-title { font-size: .88rem; font-weight: 800; letter-spacing: -.01em; }
+    .feat-desc  { font-size: .79rem; color: var(--muted); line-height: 1.6; }
+
+    .access-strip { margin-top: 48px; background: var(--navy); border-radius: 18px; padding: 28px 34px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .as-label { font-size: .82rem; color: rgba(255,255,255,.4); font-weight: 500; flex-shrink: 0; }
+    .as-chip  { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.6); padding: 5px 14px; border-radius: 20px; font-size: .78rem; font-weight: 500; transition: all .2s; cursor: default; }
+    .as-chip:hover { background: rgba(53,220,194,.1); border-color: rgba(53,220,194,.25); color: #fff; }
+
+    /* ══ DOCTORS SECTION ═══════════════════════════════════════ */
+    .doctors-section { padding: 96px 56px; background: var(--navy); }
+    .doctors-grid { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .doc-feat-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 18px; padding: 28px; display: flex; gap: 16px; transition: transform .22s ease, box-shadow .22s ease; }
+    .doc-feat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.25); }
+    .doc-feat-card.wide { grid-column: span 2; background: rgba(53,220,194,.05); border-color: rgba(53,220,194,.14); }
+    .df-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .df-t { background: rgba(53,220,194,.14); }
+    .df-p { background: rgba(167,139,250,.14); }
+    .df-a { background: rgba(251,191,36,.14); }
+    .df-s { background: rgba(56,189,248,.14); }
+    .df-r { background: rgba(251,113,133,.14); }
+    .df-title { font-size: .94rem; font-weight: 800; color: #fff; margin-bottom: 5px; letter-spacing: -.01em; }
+    .df-desc  { font-size: .8rem; color: rgba(255,255,255,.4); line-height: 1.65; }
+    .df-example { margin-top: 10px; background: rgba(255,255,255,.04); border-radius: 8px; padding: 8px 12px; font-size: .76rem; color: rgba(255,255,255,.3); font-style: italic; }
+
+    /* ══ BOLD STATEMENT ════════════════════════════════════════ */
+    .bold-section {
+      background: #000; padding: 128px 56px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .bold-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(53,220,194,.08), transparent 70%);
+      pointer-events: none;
+    }
+    .bold-h2 {
+      font-size: 3.8rem; font-weight: 900; color: #fff;
+      letter-spacing: -.035em; line-height: 1.08; max-width: 820px; margin: 0 auto;
+    }
+    .bold-sub {
+      margin-top: 22px; font-size: .96rem; color: rgba(255,255,255,.28);
+      max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.7;
+    }
+
+    /* ══ PRODUCTS SECTION ══════════════════════════════════════ */
+    .products-section { padding: 96px 56px; background: var(--light); }
+    .products-grid { margin-top: 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 22px; }
+    .prod-card { border-radius: 22px; padding: 40px; border: 1px solid #e2e8f0; transition: transform .22s ease, box-shadow .22s ease; }
+    .prod-card:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(0,0,0,.1); }
+    .prod-card.dark  { background: var(--navy); border-color: rgba(53,220,194,.12); }
+    .prod-card.light { background: var(--white); }
+    .prod-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 20px; }
+    .pb-p { background: rgba(53,220,194,.12); color: var(--teal); }
+    .pb-c { background: rgba(102,126,234,.1); color: #818cf8; }
+    .prod-name { font-size: 1.85rem; font-weight: 900; letter-spacing: -.025em; margin-bottom: 12px; }
+    .prod-card.dark  .prod-name { color: #fff; }
+    .prod-sub  { font-size: .88rem; line-height: 1.8; margin-bottom: 28px; }
+    .prod-card.dark  .prod-sub { color: rgba(255,255,255,.45); }
+    .prod-card.light .prod-sub { color: var(--muted); }
+    .prod-cta {
+      padding: 11px 24px; border-radius: 10px; font-size: .88rem; font-weight: 700;
+      border: none; cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .pc-p {
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite; color: #fff;
+    }
+    .pc-p:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(53,220,194,.35); }
+    .pc-o { background: transparent; color: #818cf8; border: 1.5px solid #818cf8; }
+    .pc-o:hover { background: rgba(129,140,248,.08); transform: scale(1.03); }
+    .clinic-sub { margin-top: 24px; padding-top: 22px; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 9px; }
+    .csi { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-radius: 11px; background: var(--light); border: 1px solid #e2e8f0; cursor: pointer; transition: all .18s; }
+    .csi:hover { border-color: #818cf8; background: rgba(102,126,234,.04); transform: translateX(3px); }
+    .csi-l    { display: flex; align-items: center; gap: 9px; }
+    .csi-name { font-size: .84rem; font-weight: 700; }
+    .csi-desc { font-size: .73rem; color: var(--muted); margin-top: 1px; }
+
+    /* ══ CTA SECTION ═══════════════════════════════════════════ */
+    .cta-section {
+      padding: 120px 56px; background: var(--white); text-align: center;
+    }
+    .cta-h2 { font-size: 2.6rem; font-weight: 900; letter-spacing: -.03em; margin-bottom: 14px; }
+    .cta-sub { font-size: 1rem; color: var(--muted); margin-bottom: 36px; }
+    .cta-btns { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .cta-btn-primary {
+      padding: 14px 32px; border-radius: 12px; font-size: .96rem; font-weight: 700;
+      background: linear-gradient(135deg, #35dcc2, #78eaca, #4facfe, #35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite;
+      color: #fff; border: none; cursor: pointer; font-family: inherit;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .cta-btn-primary:hover { transform: scale(1.05); box-shadow: 0 10px 32px rgba(53,220,194,.35); }
+    .cta-btn-secondary {
+      padding: 14px 32px; border-radius: 12px; font-size: .96rem; font-weight: 700;
+      background: transparent; border: 1.5px solid #e2e8f0; color: var(--muted);
+      cursor: pointer; font-family: inherit; transition: all .2s;
+    }
+    .cta-btn-secondary:hover { border-color: #9ca3af; color: var(--text); transform: scale(1.03); }
+
+    /* ══ FOOTER ════════════════════════════════════════════════ */
+    footer { background: var(--navy); border-top: 1px solid var(--border); padding: 40px 56px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-brand { font-size: .95rem; font-weight: 800; color: #fff; }
+    .footer-sub   { font-size: .76rem; color: rgba(255,255,255,.25); margin-top: 4px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link  { font-size: .81rem; color: rgba(255,255,255,.32); text-decoration: none; transition: color .2s; }
+    .footer-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="#"><div class="nav-mark"><img src="logo-dark.png" alt="Elevia"/></div>elevia</a>
+  <div class="nav-links">
+    <button class="nav-btn">For Patients</button>
+    <div class="nav-item">
+      <button class="nav-btn">For Doctors ▾</button>
+      <div class="dropdown">
+        <div class="dd-item"><div class="dd-title">🏥 elevia-clinic</div><div class="dd-sub">Patient management, scheduling & EHR</div></div>
+        <div class="dd-hr"></div>
+        <a href="clinic-onboard.html" style="text-decoration:none"><div class="dd-item"><div class="dd-title">✚ Onboard your clinic</div><div class="dd-sub">Add your clinic to the Elevia platform</div></div></a>
+      </div>
+    </div>
+    <button class="nav-btn">How it works</button>
+    <button class="nav-btn">Pricing</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-ghost">Sign in</button>
+    <button class="nav-cta">Get started free</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<section class="hero" id="heroSection">
+  <div class="hero-glow" id="heroGlow"></div>
+  <div class="hero-eyebrow">✦ Elevia, your personalized AI health assistant</div>
+  <h1 class="hero-h1">Your health.<br><span class="grad-text">Fully handled.</span></h1>
+  <p class="hero-sub">Elevia connects your questions, data, doctors, and prescriptions — into <strong>one continuous system.</strong></p>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <input type="text" id="heroInput" placeholder=""/>
+      <div class="search-footer">
+        <div class="search-left">
+          <button class="ft-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            Connect your Fitness Trackers
+          </button>
+          <button class="ft-add" onclick="toggleTrackerDropdown(event)">+</button>
+        </div>
+        <div class="search-right">
+          <button class="mic-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <button class="search-send" id="heroSend" onclick="triggerHeroSend()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracker dropdown — below search box -->
+    <div class="tracker-dropdown" id="trackerDropdown">
+      <div class="td-header">Connect a tracker</div>
+      <div class="td-item">
+        <div class="td-logo" style="background:#1a1a2e">
+          <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="12" stroke="#c8a96e" stroke-width="4" fill="none"/>
+            <circle cx="20" cy="20" r="6" stroke="#c8a96e" stroke-width="2" fill="none" opacity=".5"/>
+          </svg>
+        </div>
+        <div><div class="td-name">Oura Ring</div><div class="td-desc">Sleep, HRV & readiness</div></div>
+      </div>
+      <div class="td-item">
+        <div class="td-logo" style="background:#000">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <circle cx="13" cy="13" r="11" stroke="#ff3b30" stroke-width="2.8" fill="none" stroke-dasharray="44 25" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="7.5" stroke="#30d158" stroke-width="2.8" fill="none" stroke-dasharray="32 16" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="4" stroke="#32ade6" stroke-width="2.8" fill="none" stroke-dasharray="18 8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div><div class="td-name">Apple Watch</div><div class="td-desc">Activity, heart rate & ECG</div></div>
+      </div>
+      <div class="td-item">
+        <div class="td-logo" style="background:#000">
+          <svg width="30" height="14" viewBox="0 0 60 22" fill="none">
+            <text x="0" y="17" font-family="Arial Black,sans-serif" font-size="17" font-weight="900" fill="#00c7b1" letter-spacing="-1">WHOOP</text>
+          </svg>
+        </div>
+        <div><div class="td-name">WHOOP</div><div class="td-desc">Strain, recovery & sleep</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust-strip">
+    <div class="trust-item"><span>🔒</span> HIPAA Ready</div>
+    <div class="trust-item"><span>⚡</span> Real-time</div>
+    <div class="trust-item"><span>🏥</span> Clinical-grade AI</div>
+    <div class="trust-item"><span>🔐</span> End-to-end encrypted</div>
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ═══════════════════════════════════════════════════════ -->
+<section class="hiw-section">
+  <div class="section-label">How it works</div>
+  <h2 class="section-h2">From question to care — in one conversation.</h2>
+  <p class="section-sub">No forms. No phone calls. No waiting rooms. Just ask.</p>
+  <div class="hiw-grid">
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap c1">💬</div>
+      <div class="hiw-title">Ask anything</div>
+      <div class="hiw-desc">Symptoms, questions, prescriptions, referrals — no forms, no friction.</div>
+    </div>
+    <div class="hiw-arrow">→</div>
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap c2">🧠</div>
+      <div class="hiw-title">AI understands</div>
+      <div class="hiw-desc">Elevia reads context across your history, data, and clinical knowledge.</div>
+    </div>
+    <div class="hiw-arrow">→</div>
+    <div class="hiw-step">
+      <div class="hiw-icon-wrap c3">⚡</div>
+      <div class="hiw-title">Action instantly</div>
+      <div class="hiw-desc">Books appointments, submits prescriptions, schedules follow-ups.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEMO ═══════════════════════════════════════════════════════════════ -->
+<section class="demo-section">
+  <div class="demo-header">
+    <div class="section-label">See it in action</div>
+    <h2 class="section-h2">Watch @elevia think, decide, and act.</h2>
+    <p class="section-sub" style="margin:10px auto 0">Real patient scenarios. End-to-end, in seconds.</p>
+  </div>
+
+  <div class="demo-shell">
+    <div class="scenario-sidebar">
+      <div class="sidebar-title">Scenarios</div>
+      <button class="scenario-btn active" onclick="selectScenario(0,this)"><span class="s-icon">🧠</span>Mental health screening</button>
+      <button class="scenario-btn" onclick="selectScenario(1,this)"><span class="s-icon">🩺</span>Skin issue & derm</button>
+      <button class="scenario-btn" onclick="selectScenario(2,this)"><span class="s-icon">💊</span>Prescription refill</button>
+    </div>
+    <div class="chat-panel">
+      <div class="chat-topbar">
+        <div class="chat-av">🌿</div>
+        <div><div class="chat-name">@elevia</div><div class="chat-tagline">Your personal health AI</div></div>
+        <div class="online-ind"><div class="online-dot"></div>Online</div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-inputbar">
+        <input class="chat-input" placeholder="Simulating conversation…" disabled/>
+        <button class="chat-send">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="replay-row">
+    <button class="replay-btn" onclick="replayScenario()">↻ Replay</button>
+  </div>
+</section>
+
+<!-- ══ WHAT IS ELEVIA ══════════════════════════════════════════════════════ -->
+<section class="what-section">
+  <div>
+    <div class="what-label">The platform</div>
+    <h2 class="what-h2">Healthcare is broken.<br>Elevia fixes the flow.</h2>
+    <p class="what-body">No more phone tag with offices. No more lost prescriptions. No more wondering if you're seeing the right specialist.</p>
+    <p class="what-body" style="margin-bottom:0;color:#1a202c;font-weight:500">Elevia sits at the center — connecting patients to care and giving doctors the tools to deliver it.</p>
+  </div>
+  <div class="what-cards">
+    <div class="what-card">
+      <div class="wc-icon p">👤</div>
+      <div>
+        <div class="wc-label p">For patients</div>
+        <div class="wc-title">A personal AI that guides your health journey end-to-end</div>
+        <div class="wc-desc">From first question to follow-up — Elevia handles it so you never fall through the cracks.</div>
+      </div>
+    </div>
+    <div class="what-card">
+      <div class="wc-icon d">🩺</div>
+      <div>
+        <div class="wc-label d">For doctors</div>
+        <div class="wc-title">More time for care, less time on admin</div>
+        <div class="wc-desc">Instant patient insights, AI notes, automated scheduling, and EHR integration — all in one place.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOR PATIENTS ════════════════════════════════════════════════════════ -->
+<section class="patients-section">
+  <div class="sec-label" style="color:var(--teal)">For patients</div>
+  <h2 class="sec-h2">Take control of your health.</h2>
+  <p class="sec-sub" style="margin-bottom:16px">No appointments needed to get answers.</p>
+  <ul class="sec-list" style="margin-bottom:40px">
+    <li>No phone calls</li>
+    <li>No waiting</li>
+    <li>No confusion</li>
+  </ul>
+
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon fi-t">💬</div><div class="feat-title">Instant answers</div><div class="feat-desc">Clear, reliable health answers 24/7 — no waiting, no uncertainty.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-i">🔍</div><div class="feat-title">Find the right doctor</div><div class="feat-desc">Matched to in-network providers by condition, location, and insurance.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-a">📅</div><div class="feat-title">Auto-book appointments</div><div class="feat-desc">No back-and-forth. Elevia handles confirmation and reminders automatically.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-r">🔔</div><div class="feat-title">Smart follow-ups</div><div class="feat-desc">Nothing falls through the cracks. Your care stays on track automatically.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-s">💊</div><div class="feat-title">Prescription management</div><div class="feat-desc">Track, submit, and refill prescriptions — get notified before you run out.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-t">🤖</div><div class="feat-title">Works inside your AI</div><div class="feat-desc">Access @elevia directly through Claude, ChatGPT, or Gemini.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-i">📱</div><div class="feat-title">Web & mobile</div><div class="feat-desc">Browser, iOS, or Android — your health context follows you everywhere.</div></div>
+    <div class="feat-card"><div class="feat-icon fi-a">🕐</div><div class="feat-title">Always available</div><div class="feat-desc">2am or Monday morning — Elevia is on, always, no appointment needed.</div></div>
+  </div>
+
+  <div class="access-strip">
+    <span class="as-label">Access Elevia via</span>
+    <span class="as-chip">🌐 elevia.health</span>
+    <span class="as-chip">📱 iOS & Android</span>
+    <span class="as-chip">✦ Claude (Anthropic)</span>
+    <span class="as-chip">✦ ChatGPT (OpenAI)</span>
+    <span class="as-chip">✦ Gemini (Google)</span>
+  </div>
+</section>
+
+<!-- ══ FOR DOCTORS ═════════════════════════════════════════════════════════ -->
+<section class="doctors-section">
+  <div class="sec-label" style="color:var(--mint)">For doctors</div>
+  <h2 class="sec-h2" style="color:#fff;margin-top:8px">Focus on patients.<br>We'll handle the rest.</h2>
+  <p class="sec-sub" style="color:rgba(255,255,255,.38);max-width:480px">Every minute saved on admin is a minute spent on care.</p>
+  <div class="doctors-grid">
+    <div class="doc-feat-card wide">
+      <div class="df-icon df-t" style="width:50px;height:50px;font-size:1.3rem">💬</div>
+      <div>
+        <div class="df-title">Conversational patient insights</div>
+        <div class="df-desc">Ask anything about a patient in plain language — get an answer from their complete record in seconds.</div>
+        <div class="df-example">"What medications is this patient on?" · "Summarize last visit notes" · "Who referred this patient?"</div>
+      </div>
+    </div>
+    <div class="doc-feat-card">
+      <div class="df-icon df-p">📋</div>
+      <div>
+        <div class="df-title">Unified patient timeline</div>
+        <div class="df-desc">Labs, prescriptions, notes, and referrals — structured and searchable in one place.</div>
+      </div>
+    </div>
+    <div class="doc-feat-card">
+      <div class="df-icon df-a">🎙️</div>
+      <div>
+        <div class="df-title">AI-powered note-taking</div>
+        <div class="df-desc">Dictate or chat — Elevia captures, structures, and files your clinical notes automatically.</div>
+      </div>
+    </div>
+    <div class="doc-feat-card">
+      <div class="df-icon df-s">🩺</div>
+      <div>
+        <div class="df-title">Pre-screened patients</div>
+        <div class="df-desc">Elevia screens incoming patients against your clinic's criteria — before they reach your calendar.</div>
+      </div>
+    </div>
+    <div class="doc-feat-card">
+      <div class="df-icon df-r">🔗</div>
+      <div>
+        <div class="df-title">Seamless EHR integration</div>
+        <div class="df-desc">Works with your existing systems. Appointments and notes flow in automatically — zero double entry.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BOLD STATEMENT ══════════════════════════════════════════════════════ -->
+<section class="bold-section">
+  <h2 class="bold-h2">Healthcare will run on AI.<br><span class="grad-text">Elevia is the interface.</span></h2>
+  <p class="bold-sub">The system is broken. The technology is here. The time is now.</p>
+</section>
+
+<!-- ══ PRODUCTS ════════════════════════════════════════════════════════════ -->
+<section class="products-section">
+  <div class="sec-label" style="color:var(--teal)">Our products</div>
+  <h2 class="sec-h2" style="margin-top:8px">Two products. One platform.</h2>
+  <p class="sec-sub">Patient or clinic — Elevia has you covered.</p>
+  <div class="products-grid">
+    <div class="prod-card dark">
+      <div class="prod-badge pb-p">🌿 For patients</div>
+      <div class="prod-name">elevia</div>
+      <div class="prod-sub">Your always-on personal health AI. Find doctors, book appointments, track prescriptions, and get answers — all through conversation. Available on web, mobile, and inside your favourite AI.</div>
+      <button class="prod-cta pc-p">Start for free →</button>
+    </div>
+    <div class="prod-card light">
+      <div class="prod-badge pb-c">🏥 For clinics</div>
+      <div class="prod-name">elevia-clinic</div>
+      <div class="prod-sub">The complete platform for modern clinics — patient management, intelligent scheduling, and seamless EHR integration.</div>
+      <button class="prod-cta pc-o">Learn more →</button>
+      <div class="clinic-sub">
+        <div class="csi"><div class="csi-l"><span>🖥️</span><div><div class="csi-name">Admin portal</div><div class="csi-desc">Clinic dashboard, provider & intake management</div></div></div><span>›</span></div>
+        <div class="csi"><div class="csi-l"><span>📅</span><div><div class="csi-name">Scheduler</div><div class="csi-desc">Availability, booking & calendar sync</div></div></div><span>›</span></div>
+        <a href="clinic-onboard.html" style="text-decoration:none"><div class="csi"><div class="csi-l"><span>✚</span><div><div class="csi-name">Onboard your clinic</div><div class="csi-desc">We crawl your site and set up your profile automatically</div></div></div><span>›</span></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ═════════════════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="section-label" style="justify-content:center;display:flex">Get started</div>
+  <h2 class="cta-h2">Start using Elevia today.</h2>
+  <p class="cta-sub">No waiting. No confusion. Just care.</p>
+  <div class="cta-btns">
+    <button class="cta-btn-primary">Try Elevia free →</button>
+    <a href="clinic-onboard.html" style="text-decoration:none"><button class="cta-btn-secondary">Onboard your clinic</button></a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:28px;height:28px;flex-shrink:0"><img src="logo-dark.png" alt="Elevia" style="width:100%;height:100%;object-fit:contain"/></div>
+    <div><div class="footer-brand">elevia health</div><div class="footer-sub">Healthcare will run on AI. Elevia is the interface.</div></div>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Terms</a>
+    <a class="footer-link" href="#">Contact</a>
+    <a class="footer-link" href="#">© 2026 Elevia Health, Inc.</a>
+  </div>
+</footer>
+
+<script>
+/* ── Demo scenarios ──────────────────────────────────────────────────── */
+const SCENARIOS = [
+  /* 0 — Mental health / anxiety */
+  [
+    { role:'user',  text:"I've been feeling really anxious and can't sleep" },
+    { role:'agent', text:"I hear you — that sounds exhausting. Thank you for sharing. Let me run a quick assessment to better understand what you're experiencing." },
+    { role:'component', type:'screening', data:{
+        title:'GAD-7 — Anxiety Screening',
+        questions:[
+          { q:'Feeling nervous, anxious or on edge?',         opts:['Not at all','Several days','More than half','Nearly every day'] },
+          { q:'Not being able to stop or control worrying?',  opts:['Not at all','Several days','More than half','Nearly every day'] },
+          { q:'Trouble relaxing?',                            opts:['Not at all','Several days','More than half','Nearly every day'] },
+        ]
+      }
+    },
+    { role:'agent', text:"Based on your responses, you're showing signs of moderate anxiety (score 11/21). I'd strongly recommend speaking with a therapist. Want me to find someone near you?" },
+    { role:'user',  text:"Yes — find me a therapist" },
+    { role:'agent', text:"Three quick questions: What's your age, city/state, and insurance plan?" },
+    { role:'user',  text:"28, Hartford CT, Aetna" },
+    { role:'agent', text:"Found 3 therapists near Hartford who accept Aetna and are taking new patients:" },
+    { role:'component', type:'doctors', data:[
+        { name:'Dr. Sarah Chen, PhD',   spec:'Clinical Psychology · CBT & EMDR',  rating:'4.9', reviews:'51', tags:['Aetna','New patients'], av:'a1', emoji:'👩‍⚕️' },
+        { name:'Dr. Marcus Webb, LCSW', spec:'Anxiety & Trauma Specialist',        rating:'4.8', reviews:'34', tags:['Aetna','New patients'], av:'a2', emoji:'👨‍⚕️' },
+        { name:'Dr. Priya Nair, PsyD',  spec:'Mood Disorders · Mindfulness',       rating:'4.7', reviews:'28', tags:['Aetna','New patients'], av:'a3', emoji:'👩‍⚕️' },
+      ]
+    },
+    { role:'user',  text:"Book me with Dr. Sarah Chen" },
+    { role:'agent', text:"Great choice. Dr. Chen's clinic has a brief intake form before we confirm:" },
+    { role:'component', type:'intake', data:{
+        title:"Dr. Chen's Clinic — Intake Questions",
+        questions:["Any active suicidal ideation or self-harm thoughts?","Have you previously received psychiatric medication?","Do you prefer telehealth or in-person sessions?"]
+      }
+    },
+    { role:'agent', text:"Last details: full name, email, date of birth, insurance ID, and preferred date & time?" },
+    { role:'user',  text:"Alex Johnson, alex@email.com, DOB 1996-05-12, AET-98765, Tuesday March 25 at 2pm" },
+    { role:'component', type:'confirm', data:{
+        title:'✅ Appointment Confirmed',
+        rows:[
+          { label:'Doctor',  val:'Dr. Sarah Chen, PhD' },
+          { label:'Date',    val:'Tuesday, March 25 · 2:00 PM' },
+          { label:'Type',    val:'In-person · 50 min initial consult' },
+          { label:'Address', val:'145 Elm St, Suite 3, Hartford CT' },
+          { label:'Ref #',   val:'APT-20260325-SCH' },
+        ]
+      }
+    },
+    { role:'agent', text:"You're all set. Confirmation sent to alex@email.com and added to your calendar. I'll send a reminder 24 hours before." },
+  ],
+
+  /* 1 — Skin issue */
+  [
+    { role:'user',  text:"I have a rash on my arm that won't go away" },
+    { role:'agent', text:"I can help look into that. How long have you had it, and is it itchy, painful, or spreading?" },
+    { role:'user',  text:"About 2 weeks. It's really itchy and getting bigger." },
+    { role:'agent', text:"That pattern is consistent with contact dermatitis or early eczema. Let me find dermatologists near you. What's your city/state and insurance?" },
+    { role:'user',  text:"San Francisco CA, Kaiser Permanente" },
+    { role:'agent', text:"Found 3 dermatologists near San Francisco accepting Kaiser:" },
+    { role:'component', type:'doctors', data:[
+        { name:'Dr. James Patel, MD',  spec:'Dermatology · Eczema & Inflammatory Skin', rating:'4.9', reviews:'87', tags:['Kaiser','New patients'], av:'a1', emoji:'👨‍⚕️' },
+        { name:'Dr. Lily Chang, MD',   spec:'Dermatology · Cosmetic & Medical',          rating:'4.8', reviews:'61', tags:['Kaiser','New patients'], av:'a2', emoji:'👩‍⚕️' },
+        { name:'Dr. Omar Hassan, MD',  spec:'Dermatology · Allergic & Contact',          rating:'4.7', reviews:'43', tags:['Kaiser','New patients'], av:'a3', emoji:'👨‍⚕️' },
+      ]
+    },
+    { role:'user',  text:"Book me with Dr. Patel" },
+    { role:'agent', text:"Full name, email, date of birth, insurance ID, and preferred date & time?" },
+    { role:'user',  text:"Jordan Kim, jordan@email.com, DOB 1990-11-03, KP-77234, Friday March 28 at 9am" },
+    { role:'component', type:'confirm', data:{
+        title:'✅ Appointment Confirmed',
+        rows:[
+          { label:'Doctor',  val:'Dr. James Patel, MD' },
+          { label:'Date',    val:'Friday, March 28 · 9:00 AM' },
+          { label:'Type',    val:'In-person · Initial skin consult' },
+          { label:'Address', val:'900 Hyde St, San Francisco CA' },
+          { label:'Ref #',   val:'APT-20260328-PAT' },
+        ]
+      }
+    },
+    { role:'agent', text:"Confirmed. See you Friday morning, Jordan. I'll send a reminder the evening before." },
+  ],
+
+  /* 2 — Prescription refill */
+  [
+    { role:'user',  text:"When is my prescription refill for Estrogen due?" },
+    { role:'component', type:'rx-info', data:{
+        title:'💊 Prescription on File',
+        rows:[
+          { label:'Medication',  val:'Estradiol 1mg (Estrogen)' },
+          { label:'Last filled', val:'February 15, 2026 · 30-day supply' },
+          { label:'Refill due',  val:'March 17, 2026 (in 2 days)' },
+          { label:'Prescriber',  val:'Dr. Olivia Park, MD' },
+        ], status:'due'
+      }
+    },
+    { role:'agent', text:"Your Estradiol 1mg refill is due in 2 days — March 17. Want me to send the refill order to your pharmacy?" },
+    { role:'user',  text:"Yes please" },
+    { role:'agent', text:"I don't have a pharmacy on file yet. Which pharmacy would you like?" },
+    { role:'user',  text:"CVS on 123 Main Street Hartford CT" },
+    { role:'agent', text:"Sending your Estradiol refill to CVS Pharmacy at 123 Main St, Hartford CT…" },
+    { role:'component', type:'rx-confirm', data:{
+        title:'✅ Refill Order Submitted',
+        rows:[
+          { label:'Medication', val:'Estradiol 1mg (Estrogen)' },
+          { label:'Pharmacy',   val:'CVS · 123 Main St, Hartford CT' },
+          { label:'Est. ready', val:'March 16, 2026 by 6:00 PM' },
+          { label:'Ref #',      val:'RX-20260316-EST' },
+        ], status:'sent'
+      }
+    },
+    { role:'agent', text:"Done. CVS estimates it'll be ready by tomorrow evening. I've saved CVS on Main St as your default pharmacy." },
+  ],
+];
+
+let currentScenario = 0, frameIndex = 0, timer = null;
+const DELAYS = { typing:850, agent:1100, user:650, component:450 };
+
+function msgEl(role, html, streaming) {
+  const w = document.createElement('div');
+  w.className = `msg ${role==='user'?'user':'agent'}${streaming?' msg-streaming':''}`;
+  const a = document.createElement('div');
+  a.className = `msg-av${role==='user'?' u':''}`;
+  a.textContent = role==='user'?'you':'🌿';
+  const b = document.createElement('div'); b.className = 'msg-bubble'; b.innerHTML = html;
+  w.appendChild(a); w.appendChild(b); return w;
+}
+function typingEl() {
+  const w = document.createElement('div'); w.className = 'typing';
+  const a = document.createElement('div'); a.className = 'msg-av'; a.textContent = '🌿';
+  const b = document.createElement('div'); b.className = 'typing-bubble';
+  [0,1,2].forEach(()=>{ const d=document.createElement('div'); d.className='typing-dot'; b.appendChild(d); });
+  w.appendChild(a); w.appendChild(b); return w;
+}
+function renderScreening(d) {
+  const c = document.createElement('div'); c.className = 'screening-card';
+  c.innerHTML = `<div class="sc-title">📋 ${d.title}</div>`;
+  d.questions.forEach(q => {
+    const qd = document.createElement('div'); qd.className = 'sc-question';
+    qd.innerHTML = `<div class="sc-q-text">${q.q}</div><div class="sc-options">${q.opts.map((o,i)=>`<div class="sc-opt${i===1?' sel':''}">${o}</div>`).join('')}</div>`;
+    c.appendChild(qd);
+  });
+  return c;
+}
+function renderDoctors(docs) {
+  const w = document.createElement('div'); w.className = 'doctor-tiles';
+  docs.forEach((d,i) => {
+    const t = document.createElement('div'); t.className = `doc-tile${i===0?' selected':''}`;
+    t.innerHTML = `<div class="doc-avatar ${d.av}">${d.emoji}</div><div class="doc-info"><div class="doc-name">${d.name}</div><div class="doc-spec">${d.spec}</div><div class="doc-meta">${d.tags.map(t=>`<span class="doc-badge ins">${t}</span>`).join('')}</div></div><div class="doc-rating">⭐ ${d.rating} <span style="color:rgba(255,255,255,.25)">(${d.reviews})</span></div>`;
+    t.onclick = () => { w.querySelectorAll('.doc-tile').forEach(x=>x.classList.remove('selected')); t.classList.add('selected'); };
+    w.appendChild(t);
+  });
+  return w;
+}
+function renderIntake(d) {
+  const c = document.createElement('div'); c.className = 'intake-card';
+  c.innerHTML = `<div class="ic-title">📝 ${d.title}</div>` + d.questions.map((q,i)=>`<div class="ic-q"><span class="ic-q-num">${i+1}.</span>${q}</div>`).join('');
+  return c;
+}
+function renderConfirm(d) {
+  const c = document.createElement('div'); c.className = 'confirm-card';
+  c.innerHTML = `<div class="cc-title">${d.title}</div>` + d.rows.map(r=>`<div class="cc-row"><span class="cc-label">${r.label}</span><span>${r.val}</span></div>`).join('');
+  return c;
+}
+function renderRxInfo(d) {
+  const c = document.createElement('div'); c.className = 'rx-card';
+  c.innerHTML = `<div class="rx-title">${d.title}</div>` + d.rows.map(r=>`<div class="rx-row"><span class="rx-label">${r.label}</span><span>${r.val}</span></div>`).join('') + `<div class="rx-status due">⚠ Refill due soon</div>`;
+  return c;
+}
+function renderRxConfirm(d) {
+  const c = document.createElement('div'); c.className = 'rx-card';
+  c.innerHTML = `<div class="rx-title">${d.title}</div>` + d.rows.map(r=>`<div class="rx-row"><span class="rx-label">${r.label}</span><span>${r.val}</span></div>`).join('') + `<div class="rx-status sent">✓ Refill submitted</div>`;
+  return c;
+}
+function append(el) {
+  const c = document.getElementById('chatMessages'); c.appendChild(el); c.scrollTop = c.scrollHeight;
+}
+function playFrame() {
+  const frames = SCENARIOS[currentScenario];
+  if (frameIndex >= frames.length) return;
+  const f = frames[frameIndex++];
+  if (f.role === 'user') {
+    append(msgEl('user', f.text));
+    timer = setTimeout(playFrame, DELAYS.user + f.text.length * 14);
+  } else if (f.role === 'agent') {
+    const t = typingEl(); append(t);
+    timer = setTimeout(() => {
+      t.remove();
+      const m = msgEl('agent', f.text, false);
+      append(m);
+      timer = setTimeout(playFrame, DELAYS.agent);
+    }, DELAYS.typing);
+  } else if (f.role === 'component') {
+    let el;
+    if      (f.type==='screening')  el = renderScreening(f.data);
+    else if (f.type==='doctors')    el = renderDoctors(f.data);
+    else if (f.type==='intake')     el = renderIntake(f.data);
+    else if (f.type==='confirm')    el = renderConfirm(f.data);
+    else if (f.type==='rx-info')    el = renderRxInfo(f.data);
+    else if (f.type==='rx-confirm') el = renderRxConfirm(f.data);
+    if (el) { const w = document.createElement('div'); w.style.paddingLeft='34px'; w.appendChild(el); append(w); }
+    timer = setTimeout(playFrame, DELAYS.component + 600);
+  }
+}
+function selectScenario(idx, btn) {
+  if (timer) clearTimeout(timer);
+  currentScenario = idx; frameIndex = 0;
+  document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('chatMessages').innerHTML = '';
+  timer = setTimeout(playFrame, 500);
+}
+function replayScenario() {
+  if (timer) clearTimeout(timer);
+  document.getElementById('chatMessages').innerHTML = '';
+  frameIndex = 0;
+  timer = setTimeout(playFrame, 500);
+}
+
+/* ── Rotating placeholder — sharper prompts ─────────────────────── */
+const PLACEHOLDERS = [
+  "How can I help you today?",
+  "Why am I always tired?",
+  "I think I have anxiety",
+  "Find me a dermatologist near me",
+  "Refill my blood pressure medication",
+  "Analyze my blood test results",
+  "Find a cardiologist who takes Aetna in Hartford CT",
+  "When is my next doctor appointment?",
+];
+let phIdx = 0, phTimer = null, phFocused = false;
+
+function typePlaceholder() {
+  if (phFocused) return;
+  const input = document.getElementById('heroInput');
+  const text = PLACEHOLDERS[phIdx];
+  let i = 0;
+  input.placeholder = '';
+  function typeChar() {
+    if (phFocused) return;
+    if (i <= text.length) {
+      input.placeholder = text.slice(0, i++) + (i <= text.length ? '|' : '');
+      phTimer = setTimeout(typeChar, 40);
+    } else {
+      phTimer = setTimeout(() => {
+        if (!phFocused) { phIdx = (phIdx + 1) % PLACEHOLDERS.length; typePlaceholder(); }
+      }, 2600);
+    }
+  }
+  typeChar();
+}
+
+const heroInput = document.getElementById('heroInput');
+heroInput.addEventListener('focus', () => {
+  phFocused = true;
+  clearTimeout(phTimer);
+  heroInput.placeholder = 'Ask anything about your health…';
+});
+heroInput.addEventListener('input', () => {
+  const send = document.getElementById('heroSend');
+  send.classList.toggle('has-input', heroInput.value.trim().length > 0);
+});
+
+/* ── Cursor glow in hero ─────────────────────────────────────────── */
+const heroSection = document.getElementById('heroSection');
+const heroGlow    = document.getElementById('heroGlow');
+heroSection.addEventListener('mousemove', (e) => {
+  const rect = heroSection.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + '%';
+  const y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1) + '%';
+  heroGlow.style.background = `
+    radial-gradient(600px circle at ${x} ${y}, rgba(53,220,194,.18), transparent 40%),
+    radial-gradient(900px circle at ${x} ${y}, rgba(79,172,254,.1), transparent 60%)
+  `;
+});
+heroSection.addEventListener('mouseleave', () => {
+  heroGlow.style.background = '';
+});
+
+/* ── Tracker dropdown ────────────────────────────────────────────── */
+function toggleTrackerDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('trackerDropdown').classList.toggle('open');
+}
+document.addEventListener('click', () => {
+  document.getElementById('trackerDropdown').classList.remove('open');
+});
+
+function triggerHeroSend() {
+  const v = heroInput.value.trim();
+  if (!v) return;
+  heroInput.value = '';
+  document.getElementById('heroSend').classList.remove('has-input');
+  window.scrollTo({ top: document.querySelector('.demo-section').offsetTop - 80, behavior:'smooth' });
+}
+
+window.addEventListener('load', () => {
+  setTimeout(typePlaceholder, 900);
+  timer = setTimeout(playFrame, 800);
+});
+</script>
+</body>
+</html>

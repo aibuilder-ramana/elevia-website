@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Onboard Your Clinic — Elevia</title>
+  <link rel="icon" type="image/png" href="logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #35dcc2; --mint: #78eaca; --navy: #0a1628; --dark: #0f2137;
+      --text: #1a202c; --muted: #64748b; --light: #f8fafc; --white: #ffffff;
+      --border: #e2e8f0; --grad: linear-gradient(135deg,#35dcc2,#78eaca);
+    }
+    @keyframes gradMove {
+      0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--text); }
+
+    /* ══ NAV ══════════════════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(10,22,40,.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; padding: 0 56px; height: 66px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 9px; font-size: 1rem; font-weight: 800; color: #fff; text-decoration: none; margin-right: 24px; }
+    .nav-mark  {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    }
+    .nav-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .nav-divider { width: 1px; height: 22px; background: rgba(255,255,255,.12); margin: 0 20px; }
+    .nav-page { font-size: .84rem; color: rgba(255,255,255,.45); font-weight: 500; }
+    .nav-right { margin-left: auto; }
+    .nav-back {
+      padding: 8px 16px; border-radius: 8px; font-size: .84rem; font-weight: 600;
+      color: rgba(255,255,255,.55); background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1); cursor: pointer; font-family: inherit;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: all .2s;
+    }
+    .nav-back:hover { color: #fff; background: rgba(255,255,255,.1); }
+
+    /* ══ HERO STRIP ═══════════════════════════════════════════ */
+    .hero-strip {
+      background: var(--navy); padding: 72px 56px 64px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-strip::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(53,220,194,.13), transparent 70%);
+    }
+    .hero-strip > * { position: relative; z-index: 1; }
+    .hs-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(53,220,194,.1); border: 1px solid rgba(53,220,194,.2);
+      color: var(--teal); font-size: .78rem; font-weight: 600;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 24px; letter-spacing: .04em;
+    }
+    .hs-h1 {
+      font-size: 3.2rem; font-weight: 900; color: #fff;
+      letter-spacing: -.03em; line-height: 1.08; margin-bottom: 16px;
+    }
+    .hs-h1 .grad-text {
+      background: linear-gradient(135deg,#35dcc2,#78eaca,#4facfe,#35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hs-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,.45); max-width: 560px; margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ══ STEPS OVERVIEW ═══════════════════════════════════════ */
+    .steps-overview {
+      background: var(--light); padding: 72px 56px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .so-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+    .so-h2    { font-size: 2rem; font-weight: 900; letter-spacing: -.025em; margin-bottom: 52px; text-align: center; }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      max-width: 1000px; width: 100%; position: relative;
+    }
+    .steps-grid::before {
+      content: ''; position: absolute; top: 28px; left: 14%; right: 14%;
+      height: 2px; background: linear-gradient(90deg,var(--teal),var(--mint),#4facfe);
+      opacity: .25; z-index: 0;
+    }
+    .step-card {
+      text-align: center; padding: 0 20px; position: relative; z-index: 1;
+      animation: fadeUp .5s ease both;
+    }
+    .step-card:nth-child(1) { animation-delay: .0s }
+    .step-card:nth-child(2) { animation-delay: .1s }
+    .step-card:nth-child(3) { animation-delay: .2s }
+    .step-card:nth-child(4) { animation-delay: .3s }
+    .step-num {
+      width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900; color: #fff;
+      background: linear-gradient(135deg,#35dcc2,#78eaca,#4facfe,#35dcc2);
+      background-size: 300% 300%; animation: gradMove 6s ease infinite;
+      box-shadow: 0 8px 24px rgba(53,220,194,.35);
+    }
+    .step-card h3 { font-size: .96rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -.01em; }
+    .step-card p  { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ══ DEMO SECTION ═════════════════════════════════════════ */
+    .demo-section { padding: 80px 56px; background: var(--white); }
+    .demo-header  { text-align: center; margin-bottom: 52px; }
+    .demo-label   { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+    .demo-h2      { font-size: 1.9rem; font-weight: 900; letter-spacing: -.025em; margin-bottom: 10px; }
+    .demo-sub     { font-size: .94rem; color: var(--muted); }
+
+    /* ── Shell ── */
+    .demo-shell {
+      max-width: 920px; margin: 0 auto; border-radius: 22px; overflow: hidden;
+      border: 1px solid var(--border); box-shadow: 0 24px 72px rgba(0,0,0,.1);
+    }
+    /* top bar */
+    .shell-topbar {
+      background: var(--navy); padding: 14px 22px; display: flex; align-items: center; gap: 12px;
+    }
+    .shell-logo-mark {
+      width: 28px; height: 28px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .shell-logo-mark img { width: 100%; height: 100%; object-fit: contain; }
+    .shell-title { font-size: .9rem; font-weight: 700; color: #fff; }
+    .shell-sub   { font-size: .72rem; color: rgba(255,255,255,.35); margin-left: 4px; }
+    .shell-badge { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: .7rem; color: var(--teal); }
+    .shell-dot   { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: blink 2s infinite; }
+
+    /* step indicator */
+    .shell-stepper {
+      background: #f8fafc; border-bottom: 1px solid var(--border);
+      padding: 16px 24px; display: flex; align-items: center; gap: 0;
+    }
+    .ss-step { display: flex; align-items: center; flex: 1; }
+    .ss-dot {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+      background: var(--white); display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 700; color: var(--muted); flex-shrink: 0;
+      transition: all .3s;
+    }
+    .ss-dot.active {
+      background: linear-gradient(135deg,#35dcc2,#78eaca); border-color: transparent;
+      color: #fff; box-shadow: 0 4px 12px rgba(53,220,194,.35);
+    }
+    .ss-dot.done { background: var(--teal); border-color: transparent; color: #fff; }
+    .ss-label { font-size: .72rem; color: var(--muted); margin-left: 7px; white-space: nowrap; }
+    .ss-label.active { color: var(--teal); font-weight: 600; }
+    .ss-line { flex: 1; height: 2px; background: var(--border); margin: 0 6px; transition: background .4s; }
+    .ss-line.done { background: var(--teal); }
+
+    /* panels */
+    .shell-body  { background: var(--white); }
+    .demo-panel  { display: none; padding: 32px; animation: fadeUp .3s ease; }
+    .demo-panel.active { display: block; }
+
+    /* cards inside panels */
+    .p-card {
+      background: var(--light); border: 1px solid var(--border); border-radius: 14px; padding: 28px;
+    }
+    .p-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+    .p-card .p-sub { font-size: .87rem; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+
+    /* form fields */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .field-row.full { grid-template-columns: 1fr; }
+    .field label { display: block; font-size: .8rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 9px;
+      padding: 11px 14px; font-family: inherit; font-size: .9rem; color: var(--text);
+      background: var(--white); outline: none; transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--teal); }
+    .field-hint { font-size: .73rem; color: var(--muted); margin-top: 4px; }
+
+    /* file drop zone */
+    .drop-zone {
+      border: 2px dashed var(--border); border-radius: 12px; padding: 28px;
+      text-align: center; cursor: pointer; transition: all .2s; margin-top: 16px;
+      background: var(--white);
+    }
+    .drop-zone:hover { border-color: var(--teal); background: rgba(53,220,194,.03); }
+    .drop-zone.has-file { border-color: var(--teal); background: rgba(53,220,194,.05); }
+    .dz-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .dz-text { font-size: .85rem; color: var(--muted); }
+    .dz-text strong { color: var(--teal); }
+    .dz-file { font-size: .8rem; font-weight: 600; color: var(--teal); margin-top: 6px; }
+
+    /* action buttons */
+    .demo-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+    .btn-primary {
+      padding: 11px 26px; border-radius: 10px; font-family: inherit; font-size: .9rem; font-weight: 700;
+      background: linear-gradient(135deg,#35dcc2,#78eaca,#4facfe,#35dcc2);
+      background-size: 300% 300%; animation: gradMove 5s ease infinite;
+      color: #fff; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(53,220,194,.4); }
+    .btn-outline {
+      padding: 11px 22px; border-radius: 10px; font-family: inherit; font-size: .9rem; font-weight: 600;
+      background: none; border: 1.5px solid var(--border); color: var(--muted);
+      cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── Step 2: AI scanning animation ── */
+    .scan-center { text-align: center; padding: 20px 0 12px; }
+    .spinner-ring {
+      width: 52px; height: 52px; border: 4px solid var(--border);
+      border-top-color: var(--teal); border-radius: 50%;
+      animation: spin .8s linear infinite; margin: 0 auto 20px;
+    }
+    .scan-center h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+    .scan-center p  { font-size: .88rem; color: var(--muted); }
+    .scan-steps { margin: 24px auto 0; max-width: 360px; text-align: left; }
+    .scan-step {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0; font-size: .85rem; color: var(--muted);
+      border-bottom: 1px solid var(--border); transition: all .3s;
+    }
+    .scan-step:last-child { border-bottom: none; }
+    .scan-step.done   { color: var(--teal); }
+    .scan-step.active { color: var(--dark); font-weight: 600; }
+    .ss-icon { font-size: .95rem; width: 20px; text-align: center; flex-shrink: 0; }
+    .scan-progress { margin-top: 20px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .scan-bar { height: 100%; background: var(--grad); border-radius: 4px; width: 0; transition: width .8s ease; }
+
+    /* ── Step 3: Review ── */
+    .review-tabs {
+      display: flex; gap: 4px; background: var(--light); border-radius: 10px; padding: 4px; margin-bottom: 20px;
+    }
+    .rtab {
+      flex: 1; padding: 8px 12px; border-radius: 8px; border: none; background: none;
+      font-family: inherit; font-size: .82rem; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .rtab.active { background: var(--white); color: var(--dark); box-shadow: 0 2px 8px rgba(0,0,0,.07); font-weight: 700; }
+    .rtab-panel { display: none; }
+    .rtab-panel.active { display: block; }
+
+    .clinic-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .ci-field label { font-size: .72rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+    .ci-field input, .ci-field textarea {
+      width: 100%; border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 9px 12px; font-family: inherit; font-size: .85rem; color: var(--text);
+      background: var(--white); outline: none; transition: border-color .2s;
+    }
+    .ci-field input:focus, .ci-field textarea:focus { border-color: var(--teal); }
+    .ci-field.full { grid-column: 1 / -1; }
+
+    .provider-block {
+      border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px;
+      margin-bottom: 12px; position: relative; background: var(--white);
+      transition: border-color .2s;
+    }
+    .provider-block:hover { border-color: var(--teal); }
+    .pb-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+    .pb-avatar {
+      width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .pb-av1 { background: linear-gradient(135deg,#667eea,#764ba2); }
+    .pb-av2 { background: linear-gradient(135deg,#f093fb,#f5576c); }
+    .pb-av3 { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+    .pb-av4 { background: linear-gradient(135deg,#43e97b,#38f9d7); }
+    .pb-name { font-size: .9rem; font-weight: 700; color: var(--dark); }
+    .pb-spec { font-size: .76rem; color: var(--muted); margin-top: 2px; }
+    .pb-badge {
+      position: absolute; top: 14px; right: 16px;
+      font-size: .7rem; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+    }
+    .pb-badge.yes { background: #d1fae5; color: #065f46; }
+    .pb-badge.new { background: rgba(53,220,194,.12); color: #1a9e8e; }
+    .ins-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .chip { background: rgba(53,220,194,.1); color: #1a9e8e; border: 1px solid rgba(53,220,194,.2); border-radius: 20px; padding: 3px 10px; font-size: .72rem; font-weight: 600; }
+    .chip.gray { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
+
+    .review-note {
+      background: rgba(53,220,194,.06); border: 1px solid rgba(53,220,194,.2);
+      border-radius: 10px; padding: 12px 16px; font-size: .82rem; color: #1a9e8e;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── Step 4: Intake form ── */
+    .intake-builder { display: flex; flex-direction: column; gap: 12px; }
+    .intake-q {
+      background: var(--white); border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .intake-q:hover { border-color: var(--teal); box-shadow: 0 4px 16px rgba(53,220,194,.1); }
+    .intake-q-num { width: 26px; height: 26px; border-radius: 8px; background: rgba(53,220,194,.12); color: #1a9e8e; font-size: .78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .intake-q-text { flex: 1; font-size: .87rem; font-weight: 500; color: var(--dark); }
+    .intake-q-type { font-size: .7rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: #f3f4f6; color: var(--muted); white-space: nowrap; }
+    .intake-q-type.yn { background: rgba(99,102,241,.1); color: #6366f1; }
+    .intake-q-type.mc { background: rgba(245,158,11,.1); color: #d97706; }
+    .intake-q-type.txt{ background: rgba(14,165,233,.1); color: #0284c7; }
+    .add-q-row { display: flex; gap: 10px; margin-top: 4px; }
+    .add-q-btn {
+      padding: 9px 16px; border-radius: 9px; border: 1.5px dashed var(--border);
+      background: none; font-family: inherit; font-size: .82rem; font-weight: 600;
+      color: var(--muted); cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .add-q-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── Step 5: Success ── */
+    .success-center { text-align: center; padding: 28px 20px 20px; }
+    .success-anim {
+      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+      background: linear-gradient(135deg,#35dcc2,#78eaca);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; box-shadow: 0 12px 32px rgba(53,220,194,.4);
+    }
+    .success-center h2 { font-size: 1.5rem; font-weight: 900; color: var(--dark); margin-bottom: 10px; }
+    .success-center p  { font-size: .9rem; color: var(--muted); line-height: 1.7; max-width: 420px; margin: 0 auto 28px; }
+    .success-stats { display: flex; gap: 32px; justify-content: center; margin-bottom: 32px; }
+    .sstat strong { display: block; font-size: 2rem; font-weight: 900; color: var(--teal); line-height: 1; }
+    .sstat span   { font-size: .78rem; color: var(--muted); }
+    .success-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+    .success-chip { background: rgba(53,220,194,.1); border: 1px solid rgba(53,220,194,.2); color: #1a9e8e; border-radius: 20px; padding: 5px 14px; font-size: .8rem; font-weight: 600; }
+
+    /* ══ SOCIAL PROOF STRIP ═══════════════════════════════════ */
+    .proof-strip {
+      background: var(--light); border-top: 1px solid var(--border);
+      padding: 48px 56px; text-align: center;
+    }
+    .proof-label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+    .proof-stats { display: flex; align-items: center; justify-content: center; gap: 56px; flex-wrap: wrap; }
+    .ps-num { font-size: 2.4rem; font-weight: 900; color: var(--teal); letter-spacing: -.03em; line-height: 1; }
+    .ps-label { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+
+    /* ══ CTA STRIP ════════════════════════════════════════════ */
+    .cta-strip {
+      background: var(--navy); padding: 72px 56px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-strip::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(53,220,194,.1), transparent);
+    }
+    .cta-strip > * { position: relative; z-index: 1; }
+    .cta-h2 { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -.03em; margin-bottom: 12px; }
+    .cta-sub { font-size: .96rem; color: rgba(255,255,255,.4); margin-bottom: 32px; }
+    .cta-btn {
+      padding: 14px 36px; border-radius: 12px; font-family: inherit; font-size: 1rem; font-weight: 800;
+      background: linear-gradient(135deg,#35dcc2,#78eaca,#4facfe,#35dcc2);
+      background-size: 300% 300%; animation: gradMove 5s ease infinite;
+      color: #fff; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s;
+    }
+    .cta-btn:hover { transform: scale(1.05); box-shadow: 0 12px 36px rgba(53,220,194,.45); }
+
+    /* ══ FOOTER ═══════════════════════════════════════════════ */
+    footer {
+      background: var(--navy); border-top: 1px solid rgba(255,255,255,.06);
+      padding: 32px 56px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-brand { font-size: .9rem; font-weight: 800; color: #fff; }
+    .footer-sub   { font-size: .74rem; color: rgba(255,255,255,.22); margin-top: 3px; }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-link  { font-size: .8rem; color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s; }
+    .footer-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="index.html"><div class="nav-mark"><img src="logo-dark.png" alt="Elevia"/></div>elevia</a>
+  <div class="nav-divider"></div>
+  <span class="nav-page">Clinic Onboarding</span>
+  <div class="nav-right">
+    <a class="nav-back" href="index.html">← Back to elevia.health</a>
+  </div>
+</nav>
+
+<!-- ══ HERO STRIP ══════════════════════════════════════════════════════════ -->
+<section class="hero-strip">
+  <div class="hs-eyebrow">🏥 Powered by Elevia AI</div>
+  <h1 class="hs-h1">Onboard your clinic in<br><span class="grad-text">minutes, not weeks.</span></h1>
+  <p class="hs-sub">Our AI scans your website and documents, extracts your clinic and provider data automatically, then sets you up for patient discovery — all in 4 simple steps.</p>
+</section>
+
+<!-- ══ STEPS OVERVIEW ══════════════════════════════════════════════════════ -->
+<section class="steps-overview">
+  <div class="so-label">The process</div>
+  <h2 class="so-h2">4 steps to go live on Elevia</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Provide your info</h3>
+      <p>Enter your website URL and optionally upload a clinic registration document. Our AI does the rest.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>AI scans & extracts</h3>
+      <p>Elevia crawls your site and reads your documents — pulling out clinic details and every provider profile automatically.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Verify & confirm</h3>
+      <p>Review the extracted data in a clean editor. Edit anything before it goes live. Visual graph view included.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <h3>Set intake questions</h3>
+      <p>Define custom screening questions your patients will answer before booking — no extra tools needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEMO SECTION ════════════════════════════════════════════════════════ -->
+<section class="demo-section">
+  <div class="demo-header">
+    <div class="demo-label">Interactive demo</div>
+    <h2 class="demo-h2">See the full workflow in action.</h2>
+    <p class="demo-sub">Click through each step — this is exactly what the real tool looks like.</p>
+  </div>
+
+  <div class="demo-shell">
+
+    <!-- Top bar -->
+    <div class="shell-topbar">
+      <div class="shell-logo-mark"><img src="logo-dark.png" alt="Elevia"/></div>
+      <span class="shell-title">Elevia Clinic Onboarder</span>
+      <span class="shell-sub">AI-powered · auto-extracts from your website</span>
+      <div class="shell-badge"><div class="shell-dot"></div>Live</div>
+    </div>
+
+    <!-- Step indicator -->
+    <div class="shell-stepper" id="stepper">
+      <div class="ss-step">
+        <div class="ss-dot active" id="d1">1</div>
+        <span class="ss-label active" id="l1">Enter Info</span>
+      </div>
+      <div class="ss-line" id="sl1"></div>
+      <div class="ss-step">
+        <div class="ss-dot" id="d2">2</div>
+        <span class="ss-label" id="l2">AI Scanning</span>
+      </div>
+      <div class="ss-line" id="sl2"></div>
+      <div class="ss-step">
+        <div class="ss-dot" id="d3">3</div>
+        <span class="ss-label" id="l3">Verify Info</span>
+      </div>
+      <div class="ss-line" id="sl3"></div>
+      <div class="ss-step">
+        <div class="ss-dot" id="d4">4</div>
+        <span class="ss-label" id="l4">Intake Questions</span>
+      </div>
+      <div class="ss-line" id="sl4"></div>
+      <div class="ss-step">
+        <div class="ss-dot" id="d5">5</div>
+        <span class="ss-label" id="l5">Done</span>
+      </div>
+    </div>
+
+    <!-- Panels -->
+    <div class="shell-body">
+
+      <!-- ── PANEL 1: Enter info ──────────────────────────── -->
+      <div class="demo-panel active" id="panel-1">
+        <div class="p-card">
+          <h3>Onboard a New Clinic</h3>
+          <p class="p-sub">Enter your clinic website URL. Elevia will crawl up to 8 pages and extract all clinic &amp; provider information automatically using AI.</p>
+          <div class="field-row">
+            <div class="field">
+              <label>Clinic Name</label>
+              <input id="demo-name" type="text" value="Orange Psychiatry Associates" placeholder="e.g. Orange Psychiatry Associates"/>
+            </div>
+            <div class="field">
+              <label>Website URL</label>
+              <input id="demo-url" type="text" value="https://www.orangepsychiatry.com" placeholder="https://your-clinic.com"/>
+              <div class="field-hint">We crawl up to 8 pages to find provider information.</div>
+            </div>
+          </div>
+          <div class="drop-zone has-file" id="dropZone" onclick="toggleFile()">
+            <div class="dz-icon">📄</div>
+            <div class="dz-text">Drop your <strong>clinic registration document</strong> here, or click to browse</div>
+            <div class="dz-file" id="dzFile">Orange_Psychiatry_Registration.pdf</div>
+          </div>
+        </div>
+        <div class="demo-actions">
+          <span style="font-size:.8rem;color:var(--muted)">Takes 20–45 seconds in real-time</span>
+          <button class="btn-primary" onclick="goToStep(2)">🔍 Start AI Extraction →</button>
+        </div>
+      </div>
+
+      <!-- ── PANEL 2: AI Scanning ────────────────────────── -->
+      <div class="demo-panel" id="panel-2">
+        <div class="p-card scan-center">
+          <div class="spinner-ring"></div>
+          <h3>Scanning your clinic…</h3>
+          <p>Elevia AI is reading your website and documents</p>
+          <div class="scan-steps">
+            <div class="scan-step done"   id="ss1"><span class="ss-icon">✓</span> Fetching website pages</div>
+            <div class="scan-step active" id="ss2"><span class="ss-icon">⚙️</span> Analysing content with AI</div>
+            <div class="scan-step"        id="ss3"><span class="ss-icon">📋</span> Extracting provider profiles</div>
+            <div class="scan-step"        id="ss4"><span class="ss-icon">📄</span> Reading registration document</div>
+            <div class="scan-step"        id="ss5"><span class="ss-icon">✅</span> Building clinic profile</div>
+          </div>
+          <div class="scan-progress" style="margin-top:24px">
+            <div class="scan-bar" id="scanBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL 3: Verify info ────────────────────────── -->
+      <div class="demo-panel" id="panel-3">
+        <div class="review-note">
+          ✨ <span><strong>4 providers</strong> found across <strong>6 pages</strong> — review and edit before confirming</span>
+        </div>
+
+        <div class="review-tabs">
+          <button class="rtab active" id="rt-info" onclick="switchReviewTab('info')">📋 Clinic &amp; Providers</button>
+          <button class="rtab" id="rt-graph" onclick="switchReviewTab('graph')">🔮 Knowledge Graph</button>
+        </div>
+
+        <div class="rtab-panel active" id="rtp-info">
+          <div class="p-card" style="margin-bottom:16px">
+            <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:14px">Clinic Information</div>
+            <div class="clinic-info-grid">
+              <div class="ci-field"><label>Clinic Name</label><input value="Orange Psychiatry Associates"/></div>
+              <div class="ci-field"><label>Phone</label><input value="(714) 555-0182"/></div>
+              <div class="ci-field full"><label>Address</label><input value="1500 S. Anaheim Blvd, Suite 220, Anaheim, CA 92805"/></div>
+              <div class="ci-field"><label>Website</label><input value="https://www.orangepsychiatry.com"/></div>
+              <div class="ci-field"><label>Email</label><input value="info@orangepsychiatry.com"/></div>
+            </div>
+          </div>
+
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Providers (4 found)</div>
+
+          <div class="provider-block">
+            <span class="pb-badge yes">✓ New patients</span>
+            <div class="pb-header">
+              <div class="pb-avatar pb-av1">👩‍⚕️</div>
+              <div>
+                <div class="pb-name">Dr. Amanda Collins, MD</div>
+                <div class="pb-spec">Psychiatry · Adult &amp; Geriatric</div>
+              </div>
+            </div>
+            <div class="ins-chips">
+              <span class="chip">Aetna</span><span class="chip">Blue Cross</span><span class="chip">Cigna</span><span class="chip">Medicare</span>
+            </div>
+          </div>
+
+          <div class="provider-block">
+            <span class="pb-badge yes">✓ New patients</span>
+            <div class="pb-header">
+              <div class="pb-avatar pb-av2">👨‍⚕️</div>
+              <div>
+                <div class="pb-name">Dr. Marcus Webb, LCSW</div>
+                <div class="pb-spec">Therapy · Trauma &amp; Anxiety</div>
+              </div>
+            </div>
+            <div class="ins-chips">
+              <span class="chip">Aetna</span><span class="chip">United Healthcare</span><span class="chip">Cigna</span>
+            </div>
+          </div>
+
+          <div class="provider-block">
+            <span class="pb-badge yes">✓ New patients</span>
+            <div class="pb-header">
+              <div class="pb-avatar pb-av3">👩‍⚕️</div>
+              <div>
+                <div class="pb-name">Dr. Priya Nair, PsyD</div>
+                <div class="pb-spec">Clinical Psychology · Mood Disorders</div>
+              </div>
+            </div>
+            <div class="ins-chips">
+              <span class="chip">Blue Cross</span><span class="chip">Aetna</span>
+            </div>
+          </div>
+
+          <div class="provider-block">
+            <span class="pb-badge new">⭕ Waitlist only</span>
+            <div class="pb-header">
+              <div class="pb-avatar pb-av4">👨‍⚕️</div>
+              <div>
+                <div class="pb-name">Dr. James O'Brien, MD</div>
+                <div class="pb-spec">Psychiatry · Child &amp; Adolescent</div>
+              </div>
+            </div>
+            <div class="ins-chips">
+              <span class="chip">Cigna</span><span class="chip">Medicaid</span><span class="chip gray">+2 more</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rtab-panel" id="rtp-graph">
+          <div class="p-card" style="padding:20px">
+            <canvas id="graphCanvas" width="860" height="340" style="width:100%;border-radius:10px;background:#f8fbff"></canvas>
+            <p style="text-align:center;font-size:.78rem;color:var(--muted);margin-top:10px">Knowledge graph — clinic, providers, specializations &amp; insurance</p>
+          </div>
+        </div>
+
+        <div class="demo-actions" style="margin-top:20px">
+          <button class="btn-outline" onclick="goToStep(1)">← Back</button>
+          <button class="btn-primary" onclick="goToStep(4)">Confirm &amp; Continue →</button>
+        </div>
+      </div>
+
+      <!-- ── PANEL 4: Intake questions ──────────────────── -->
+      <div class="demo-panel" id="panel-4">
+        <div class="p-card">
+          <h3>Patient Intake Screening</h3>
+          <p class="p-sub">Define the questions patients answer before booking with your clinic. These are presented by Elevia AI during the scheduling flow.</p>
+
+          <div class="intake-builder" id="intakeBuilder">
+            <div class="intake-q">
+              <div class="intake-q-num">1</div>
+              <div class="intake-q-text">Have you previously received psychiatric treatment or therapy?</div>
+              <div class="intake-q-type yn">Yes / No</div>
+            </div>
+            <div class="intake-q">
+              <div class="intake-q-num">2</div>
+              <div class="intake-q-text">Do you have any active suicidal ideation or self-harm thoughts?</div>
+              <div class="intake-q-type yn">Yes / No</div>
+            </div>
+            <div class="intake-q">
+              <div class="intake-q-num">3</div>
+              <div class="intake-q-text">What is your primary reason for seeking care?</div>
+              <div class="intake-q-type mc">Multiple choice</div>
+            </div>
+            <div class="intake-q">
+              <div class="intake-q-num">4</div>
+              <div class="intake-q-text">Do you prefer telehealth or in-person sessions?</div>
+              <div class="intake-q-type mc">Multiple choice</div>
+            </div>
+            <div class="intake-q">
+              <div class="intake-q-num">5</div>
+              <div class="intake-q-text">Are you currently taking any psychiatric medications?</div>
+              <div class="intake-q-type yn">Yes / No</div>
+            </div>
+          </div>
+
+          <div class="add-q-row" style="margin-top:14px">
+            <button class="add-q-btn" onclick="addQuestion()">+ Add question</button>
+            <button class="add-q-btn" onclick="addQuestion()">✨ Suggest questions with AI</button>
+          </div>
+        </div>
+
+        <div class="demo-actions">
+          <button class="btn-outline" onclick="goToStep(3)">← Back</button>
+          <button class="btn-primary" onclick="goToStep(5)">✓ Review &amp; Submit →</button>
+        </div>
+      </div>
+
+      <!-- ── PANEL 5: Success ────────────────────────────── -->
+      <div class="demo-panel" id="panel-5">
+        <div class="success-center">
+          <div class="success-anim">🎉</div>
+          <h2>Clinic Onboarded Successfully!</h2>
+          <p>Orange Psychiatry Associates and all 4 provider profiles are now live on the Elevia platform — discoverable by patients in real time.</p>
+          <div class="success-stats">
+            <div class="sstat"><strong>4</strong><span>Providers saved</span></div>
+            <div class="sstat"><strong>5</strong><span>Intake questions</span></div>
+            <div class="sstat"><strong>#1042</strong><span>Clinic ID</span></div>
+          </div>
+          <div class="success-chips">
+            <span class="success-chip">✓ Clinic profile live</span>
+            <span class="success-chip">✓ 4 providers discoverable</span>
+            <span class="success-chip">✓ Intake screening active</span>
+            <span class="success-chip">✓ Calendar sync ready</span>
+          </div>
+          <button class="btn-primary" onclick="goToStep(1)">+ Onboard another clinic</button>
+        </div>
+      </div>
+
+    </div><!-- /shell-body -->
+  </div><!-- /demo-shell -->
+</section>
+
+<!-- ══ PROOF STRIP ═════════════════════════════════════════════════════════ -->
+<section class="proof-strip">
+  <div class="proof-label">Trusted by clinics on Elevia</div>
+  <div class="proof-stats">
+    <div><div class="ps-num">< 2 min</div><div class="ps-label">average onboarding time</div></div>
+    <div><div class="ps-num">98%</div><div class="ps-label">data extraction accuracy</div></div>
+    <div><div class="ps-num">Zero</div><div class="ps-label">manual data entry needed</div></div>
+  </div>
+</section>
+
+<!-- ══ CTA STRIP ═══════════════════════════════════════════════════════════ -->
+<section class="cta-strip">
+  <h2 class="cta-h2">Ready to go live?</h2>
+  <p class="cta-sub">Your clinic on Elevia — in minutes, not weeks.</p>
+  <button class="cta-btn" onclick="goToStep(1);document.querySelector('.demo-section').scrollIntoView({behavior:'smooth'})">
+    Start onboarding now →
+  </button>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div>
+    <div style="display:flex;align-items:center;gap:8px"><div style="width:24px;height:24px;flex-shrink:0"><img src="logo-dark.png" alt="Elevia" style="width:100%;height:100%;object-fit:contain"/></div><div class="footer-brand">elevia health</div></div>
+    <div class="footer-sub">Healthcare will run on AI. Elevia is the interface.</div>
+  </div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="#">Privacy</a>
+    <a class="footer-link" href="#">Terms</a>
+    <a class="footer-link" href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+/* ── Step navigation ─────────────────────────────────────────────── */
+let currentStep = 1;
+const TOTAL = 5;
+
+function goToStep(n) {
+  // hide all panels
+  for (let i = 1; i <= TOTAL; i++) {
+    document.getElementById('panel-' + i).classList.remove('active');
+  }
+  document.getElementById('panel-' + n).classList.add('active');
+  currentStep = n;
+  updateStepper(n);
+
+  if (n === 2) startScan();
+  if (n === 3) { setTimeout(drawGraph, 200); }
+}
+
+function updateStepper(n) {
+  for (let i = 1; i <= TOTAL; i++) {
+    const dot = document.getElementById('d' + i);
+    const lbl = document.getElementById('l' + i);
+    dot.classList.toggle('done',   i < n);
+    dot.classList.toggle('active', i === n);
+    lbl.classList.toggle('active', i === n);
+  }
+  for (let i = 1; i < TOTAL; i++) {
+    const line = document.getElementById('sl' + i);
+    if (line) line.classList.toggle('done', i < n);
+  }
+}
+
+/* ── Step 2: scanning animation ─────────────────────────────────── */
+function startScan() {
+  const ids     = ['ss1','ss2','ss3','ss4','ss5'];
+  const bar     = document.getElementById('scanBar');
+  const pcts    = [18, 38, 58, 78, 100];
+  let idx       = 1; // ss1 already 'done', start from ss2
+
+  // reset
+  ids.forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.classList.remove('done','active');
+    if (i === 0) { el.classList.add('done'); el.querySelector('.ss-icon').textContent = '✓'; }
+  });
+  bar.style.width = '18%';
+
+  const tick = setInterval(() => {
+    if (idx >= ids.length) { clearInterval(tick); setTimeout(() => goToStep(3), 600); return; }
+    // mark previous done
+    const prev = document.getElementById(ids[idx - 1]);
+    prev.classList.remove('active'); prev.classList.add('done');
+    prev.querySelector('.ss-icon').textContent = '✓';
+    // mark current active
+    const cur = document.getElementById(ids[idx]);
+    cur.classList.add('active');
+    bar.style.width = pcts[idx] + '%';
+    idx++;
+  }, 900);
+}
+
+/* ── Review tabs ─────────────────────────────────────────────────── */
+function switchReviewTab(t) {
+  ['info','graph'].forEach(id => {
+    document.getElementById('rtp-' + id).classList.toggle('active', id === t);
+    document.getElementById('rt-' + id).classList.toggle('active', id === t);
+  });
+  if (t === 'graph') drawGraph();
+}
+
+/* ── Knowledge graph (canvas) ────────────────────────────────────── */
+let graphDrawn = false;
+function drawGraph() {
+  if (graphDrawn) return;
+  graphDrawn = true;
+
+  const canvas = document.getElementById('graphCanvas');
+  const ctx    = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const teal  = '#35dcc2';
+  const navy  = '#0a1628';
+  const muted = '#94a3b8';
+
+  const nodes = [
+    { id:'clinic', label:'Orange\nPsychiatry', x:430, y:170, r:34, color:'#667eea', emoji:'🏥' },
+    { id:'p1', label:'Dr. Collins', x:200, y:90,  r:24, color:'#35dcc2', emoji:'👩‍⚕️' },
+    { id:'p2', label:'Dr. Webb',    x:180, y:240, r:24, color:'#35dcc2', emoji:'👨‍⚕️' },
+    { id:'p3', label:'Dr. Nair',    x:660, y:90,  r:24, color:'#35dcc2', emoji:'👩‍⚕️' },
+    { id:'p4', label:"Dr. O'Brien", x:670, y:250, r:24, color:'#35dcc2', emoji:'👨‍⚕️' },
+    { id:'s1', label:'Psychiatry',  x:100, y:170, r:18, color:'#818cf8', emoji:'' },
+    { id:'s2', label:'Therapy',     x:300, y:300, r:18, color:'#818cf8', emoji:'' },
+    { id:'s3', label:'Psychology',  x:560, y:300, r:18, color:'#818cf8', emoji:'' },
+    { id:'ins1',label:'Aetna',      x:430, y:60,  r:16, color:'#f59e0b', emoji:'' },
+    { id:'ins2',label:'BlueCross',  x:560, y:50,  r:16, color:'#f59e0b', emoji:'' },
+    { id:'ins3',label:'Cigna',      x:300, y:50,  r:16, color:'#f59e0b', emoji:'' },
+  ];
+
+  const edges = [
+    ['clinic','p1'],['clinic','p2'],['clinic','p3'],['clinic','p4'],
+    ['p1','s1'],['p2','s2'],['p3','s3'],['p4','s1'],
+    ['p1','ins1'],['p2','ins1'],['p3','ins2'],['p1','ins3'],['p4','ins1'],
+    ['ins1','clinic'],['ins3','clinic'],
+  ];
+
+  ctx.clearRect(0,0,W,H);
+
+  // draw edges
+  ctx.strokeStyle = 'rgba(148,163,184,.35)';
+  ctx.lineWidth   = 1.5;
+  edges.forEach(([a,b]) => {
+    const na = nodes.find(n=>n.id===a), nb = nodes.find(n=>n.id===b);
+    ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y); ctx.stroke();
+  });
+
+  // draw nodes
+  nodes.forEach(n => {
+    // shadow glow
+    ctx.shadowColor = n.color; ctx.shadowBlur = 14;
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    ctx.fillStyle = n.color + '22'; ctx.fill();
+    ctx.strokeStyle = n.color; ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // label
+    ctx.fillStyle = '#1e293b'; ctx.font = `600 11px Inter,sans-serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const lines = n.label.split('\n');
+    const dy = lines.length > 1 ? -6 : 0;
+    lines.forEach((ln,i) => ctx.fillText(ln, n.x, n.y + n.r + 12 + i*14 + dy));
+
+    // emoji
+    if (n.emoji) {
+      ctx.font = `${n.r * .9}px serif`;
+      ctx.fillText(n.emoji, n.x, n.y);
+    }
+  });
+}
+
+/* ── Add intake question ─────────────────────────────────────────── */
+let qCount = 5;
+function addQuestion() {
+  qCount++;
+  const builder = document.getElementById('intakeBuilder');
+  const q = document.createElement('div'); q.className = 'intake-q';
+  q.style.animation = 'fadeUp .3s ease';
+  q.innerHTML = `
+    <div class="intake-q-num">${qCount}</div>
+    <div class="intake-q-text" contenteditable="true" style="outline:none;border-bottom:1.5px solid var(--teal);padding-bottom:2px">Click to type your question…</div>
+    <div class="intake-q-type txt">Text</div>
+  `;
+  builder.appendChild(q);
+  q.querySelector('[contenteditable]').focus();
+}
+
+/* ── File drop zone toggle ───────────────────────────────────────── */
+function toggleFile() {
+  const dz = document.getElementById('dropZone');
+  const fl = document.getElementById('dzFile');
+  if (dz.classList.contains('has-file')) {
+    dz.classList.remove('has-file');
+    fl.textContent = '';
+  } else {
+    dz.classList.add('has-file');
+    fl.textContent = 'Orange_Psychiatry_Registration.pdf';
+  }
+}
+</script>
+</body>
+</html>
